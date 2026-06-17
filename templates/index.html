@@ -150,6 +150,18 @@
         </div>
     </div>
 
+    <!-- TEMPLATE FOR EMPTY STATE (NO SEARCH RESULTS) -->
+    <template id="empty-state-template">
+        <div class="empty-state">
+            <svg class="empty-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <h3>No release notes match your query</h3>
+            <p>Try clearing your search text or choosing a different category filter.</p>
+            <button id="clear-search-btn" class="btn btn-secondary" style="margin-top: 1rem;">Clear Search</button>
+        </div>
+    </template>
+
     <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toast-container" class="toast-container"></div>
 

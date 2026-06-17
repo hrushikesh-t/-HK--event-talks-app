@@ -216,13 +216,28 @@ function renderFeed() {
     timelineFeed.innerHTML = '';
     
     if (filtered.length === 0) {
-        timelineFeed.innerHTML = `
-            <div class="empty-state">
-                <svg class="empty-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <h3>No release notes match your query</h3>
-                <p>Try clearing your search text or choosing a different category filter.</p>
-            </div>
-        `;
+        const template = document.getElementById('empty-state-template');
+        if (template) {
+            timelineFeed.appendChild(template.content.cloneNode(true));
+        } else {
+            timelineFeed.innerHTML = `
+                <div class="empty-state">
+                    <svg class="empty-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <h3>No release notes match your query</h3>
+                    <p>Try clearing your search text or choosing a different category filter.</p>
+                    <button id="clear-search-btn" class="btn btn-secondary" style="margin-top: 1rem;">Clear Search</button>
+                </div>
+            `;
+        }
+        
+        const clearBtn = document.getElementById('clear-search-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                searchQuery = '';
+                renderFeed();
+            });
+        }
         return;
     }
     
@@ -407,6 +422,18 @@ tweetTextarea.addEventListener('input', () => {
     const text = tweetTextarea.value;
     const currentLength = getTweetLength(text);
     updateProgressCircle(currentLength);
+    
+    // Dynamically update preview text
+    const quoteRegex = /"([^"]*)"/;
+    const match = text.match(quoteRegex);
+    if (match && match[1] !== undefined) {
+        previewText.textContent = match[1].trim() || "Drafting update...";
+    } else {
+        // Fallback: strip URLs, hashtags, and standard prefix
+        let clean = text.replace(/https?:\/\/[^\s]+/g, '').replace(/#[^\s]+/g, '');
+        clean = clean.replace(/^GCP BigQuery\s+\[[^\]]+\]\s*\([^)]+\):\s*/i, '');
+        previewText.textContent = clean.trim() || text.trim() || "Drafting update...";
+    }
 });
 
 // INITIAL PAGE LOAD

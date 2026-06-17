@@ -35,6 +35,9 @@ def create_update_dict(date, update_type, elements, entry_link, index):
 
 def parse_entry_content(entry_html, date, entry_link):
     soup = BeautifulSoup(entry_html, 'html.parser')
+    for a in soup.find_all('a'):
+        a['target'] = '_blank'
+        a['rel'] = 'noopener noreferrer'
     updates = []
     
     current_type = "Update"
@@ -117,4 +120,4 @@ def get_release_notes():
         }), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
